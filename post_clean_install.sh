@@ -10,22 +10,36 @@
 
 mkdir ~/opt
 mkdir ~/bin
+mkdir ~/src
 
 echo $1 | sudo -S dnf update -y
 
-echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
+
+# GHC requirements
+echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python ghc happy alex git -y
+# To buil GHC doc
+echo $1 | sudo -S dnf install docbook-utils docbook-utils-pdf docbook-style-xsl -y
+# GHC suggestion: other packages that are useful for development: (optional)
+echo $1 | sudo -S dnf install strace patch -y
+# The next isn't so well done. See https://gist.github.com/yantonov/10083524
+cd ~/src &&
+git clone --recursive git://git.haskell.org/ghc.git &&
+cd ghc &&
+./boot &&
+./configure --prefix=$HOME
 
 echo $1 | sudo -S dnf intall emacs -y
 echo $1 | sudo -S dnf install eclipse -y
 echo $1 | sudo -S dnf install vlc -y
 echo $1 | sudo -S dnf install clementine -y
 echo $1 | sudo -S dnf install git -y
-echo $1 | sudo -S dnf install gitk -y
 echo $1 | sudo -S dnf install xmonad -y
 echo $1 | sudo -S dnf install stalonetray -y
 echo $1 | sudo -S dnf install xmobar -y
 echo $1 | sudo -S dnf install feh -y
 echo $1 | sudo -S dnf install maven -y
+echo $1 | sudo -S dnf install xchat -y
 
 echo $1 | sudo -S dnf install zsh -y
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
@@ -54,18 +68,18 @@ cd ~/temp
 wget --trust-server-names http://www.skype.com/go/getskype-linux-dynamic
 
 mkdir ~/opt/skype
-tar xvf skype-4.3* -C /opt/skype --strip-components=1
+tar xvf skype-4.3* -C ~/opt/skype --strip-components=1
 
-ln -s /opt/skype/skype.desktop /usr/share/applications/skype.desktop
-ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png
-ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png
- 
-touch /usr/bin/skype
-chmod 755 /usr/bin/skype
+echo $1 | sudo -S ln -s ~/opt/skype/skype.desktop /usr/share/applications/skype.desktop
+echo $1 | sudo -S ln -s ~/opt/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png
+echo $1 | sudo -S ln -s ~/opt/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png
 
-cat << EOF > /usr/bin/skype
+touch ~/bin/skype
+chmod 755 ~/bin/skype
+
+cat << EOF > ~/bin/skype
 #!/bin/sh
-export SKYPE_HOME="/opt/skype"
+export SKYPE_HOME="~/opt/skype"
  
 \$SKYPE_HOME/skype --resources=\$SKYPE_HOME \$*
 EOF
