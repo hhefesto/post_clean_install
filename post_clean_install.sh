@@ -29,22 +29,12 @@ cd ghc &&
 ./boot &&
 ./configure --prefix=$HOME
 
-echo $1 | sudo -S dnf intall emacs -y
-echo $1 | sudo -S dnf install eclipse -y
-echo $1 | sudo -S dnf install vlc -y
-echo $1 | sudo -S dnf install clementine -y
-echo $1 | sudo -S dnf install git -y
-echo $1 | sudo -S dnf install xmonad -y
-echo $1 | sudo -S dnf install stalonetray -y
-echo $1 | sudo -S dnf install xmobar -y
-echo $1 | sudo -S dnf install feh -y
-echo $1 | sudo -S dnf install maven -y
-echo $1 | sudo -S dnf install xchat -y
-
 echo $1 | sudo -S dnf install zsh -y
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
 sudo chsh -s /bin/zsh hefesto
+
+echo $1 | sudo -S dnf intall emacs -y
 
 echo $1 | sudo -S su -c "cat << EOF > /etc/yum.repos.d/google-chrome.repo
 [google-chrome]
@@ -63,6 +53,20 @@ echo $1 | sudo -S dnf install alsa-lib.i686 fontconfig.i686 freetype.i686 \
 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 \
 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 \
 	       pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686
+
+echo $1 | sudo -S dnf install http://dev.mysql.com/get/mysql-community-release-fc22-5.noarch.rpm
+
+echo $1 | sudo -S dnf install vlc -y
+echo $1 | sudo -S dnf install clementine -y
+echo $1 | sudo -S dnf install git -y
+echo $1 | sudo -S dnf install xmonad -y
+echo $1 | sudo -S dnf install stalonetray -y
+echo $1 | sudo -S dnf install xmobar -y
+echo $1 | sudo -S dnf install feh -y
+echo $1 | sudo -S dnf install maven -y
+echo $1 | sudo -S dnf install xchat -y
+
+
 
 cd ~/temp
 wget --trust-server-names http://www.skype.com/go/getskype-linux-dynamic
