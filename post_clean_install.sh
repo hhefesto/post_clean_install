@@ -1,27 +1,75 @@
 #!/bin/bash
 
 # INFO:
-# I have used this script to install my configurations after a clean Fedora 22 install.
-# BUGS may be present. i.e. I do not assure that it will work.
+# He utilizado este script para mi personalización de mi ambiente justo después de haber instalado Fedora Workstation 22
+# BUGS: Seguro hay muchos.
 # USAGE:
-# Make post_clean_install.sh executable with 'chmod +x post_clean_install.sh'
-# execute './post_clean_install.sh <YOURPASSWORD>' with a sudoer account.
-# Enjoy
+# Hacer post_clean_install.sh ejecutable con 'chmod +x post_clean_install.sh'
+# ejecutar './post_clean_install.sh <YOURPASSWORD>' con un usuarios en Sudoer.
+# Sonreir sí y sólo sí se pudo instalar sin error.
 
+echo "Haciendo folders FHS en ~"
 mkdir ~/opt
 mkdir ~/bin
 mkdir ~/src
 
+echo "dnf update"
 echo $1 | sudo -S dnf update -y
 
+echo "instalando repositorios rpmFusion para dnf"
 echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
+echo "Instalando dependencias de GHC"
 # GHC requirements
-echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python ghc happy alex git -y
+echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
 # To buil GHC doc
 echo $1 | sudo -S dnf install docbook-utils docbook-utils-pdf docbook-style-xsl -y
 # GHC suggestion: other packages that are useful for development: (optional)
 echo $1 | sudo -S dnf install strace patch -y
+
+echo "Definiendo versiones/nombres de GHC, Cabal y Stack"
+# https://gist.github.com/yantonov/10083524
+GHC_VERSION="7.10.2"  
+ARCHITECTURE="x86_64"  
+# for 32 bit ARCHITECTURE="i386"      
+PLATFORM="unknown-linux"  
+GHC_DIST_FILENAME="ghc-$GHC_VERSION-$ARCHITECTURE-$PLATFORM-deb7.tar.bz2"
+
+CABAL_VERSION="1.22.4.0"
+CABAL_DIST_FILENAME="Cabal-$CABAL_VERSION.tar.gz"
+
+CABAL_INSTALL_VERSION="1.22.6.0"
+CABAL_INSTALL_DIST_FILENAME="cabal-install-$CABAL_INSTALL_VERSION.tar.gz"
+
+STACK_VERSION="0.1.6.0"  
+STACK_ARCHITECTURE="x86_64"  
+STACK_PLATFORM="linux"  
+STACK_DIST_FILENAME="stack-$STACK_VERSION-$STACK_PLATFORM-$STACK_ARCHITECTURE.tar.gz"
+
+echo "Descargando GHC tarball"
+# get distr  
+cd $HOME/Downloads
+wget "https://www.haskell.org/ghc/dist/$GHC_VERSION/$GHC_DIST_FILENAME"  
+tar xvfj $GHC_DIST_FILENAME  
+cd ghc-$GHC_VERSION  
+
+# install to  
+echo "Instalando GHC"
+./configure # --prefix=$HOME/Development/bin/ghc-$GHC_VERSION  
+
+make install
+
+# Este paso es probable que no sea necesario dado que lo estamos instalando en /usr/local
+# symbol links
+echo "Links simbólicos GHC"
+echo $1 | sudo -S cd /usr/local/bin &&
+echo $1 | sudo -S rm -f ghc &&
+echo $1 | sudo -S ln -s `pwd`/ghc-$GHC_VERSION ghc &&
+
+# remove temporary files  
+cd $HOME/Downloads  
+rm -rfv ghc-$GHC_VERSION*
+
 # The next isn't so well done. See https://gist.github.com/yantonov/10083524
 cd ~/src &&
 git clone --recursive git://git.haskell.org/ghc.git &&
