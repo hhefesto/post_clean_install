@@ -19,6 +19,11 @@ echo $1 | sudo -S dnf update -y
 echo "instalando repositorios rpmFusion para dnf"
 echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
+# Tal vez npm instala nodejs. No he revisado.
+echo "Instalando Node.js"
+echo $1 | sudo -S dnf install npm -y
+echo $1 | sudo -S dnf install nodejs -y
+
 echo "Instalando dependencias de GHC"
 # GHC requirements
 echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
