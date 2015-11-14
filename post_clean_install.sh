@@ -21,66 +21,72 @@ echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/f
 
 # Tal vez npm instala nodejs. No he revisado.
 echo "Instalando Node.js"
-echo $1 | sudo -S dnf install npm -y
-echo $1 | sudo -S dnf install nodejs -y
+echo $1 | sudo -S dnf install npm nodejs-y
 
-echo "Instalando dependencias de GHC"
-# GHC requirements
-echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
-# To buil GHC doc
-echo $1 | sudo -S dnf install docbook-utils docbook-utils-pdf docbook-style-xsl -y
-# GHC suggestion: other packages that are useful for development: (optional)
-echo $1 | sudo -S dnf install strace patch -y
+echo "Instalando cosas..."
+echo $1 | sudo -S dnf install scrot xclip calibre -y
 
-echo "Definiendo versiones/nombres de GHC, Cabal y Stack"
-# https://gist.github.com/yantonov/10083524
-GHC_VERSION="7.10.2"  
-ARCHITECTURE="x86_64"  
-# for 32 bit ARCHITECTURE="i386"      
-PLATFORM="unknown-linux"  
-GHC_DIST_FILENAME="ghc-$GHC_VERSION-$ARCHITECTURE-$PLATFORM-deb7.tar.bz2"
+#echo "Instalando dependencias de GHC"
+## GHC requirements
+#echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
+## To buil GHC doc
+#echo $1 | sudo -S dnf install docbook-utils docbook-utils-pdf docbook-style-xsl -y
+## GHC suggestion: other packages that are useful for development: (optional)
+#echo $1 | sudo -S dnf install strace patch -y
 
-CABAL_VERSION="1.22.4.0"
-CABAL_DIST_FILENAME="Cabal-$CABAL_VERSION.tar.gz"
+#echo "Definiendo versiones/nombres de GHC, Cabal y Stack"
+## https://gist.github.com/yantonov/10083524
+#GHC_VERSION="7.10.2"  
+#ARCHITECTURE="x86_64"  
+## for 32 bit ARCHITECTURE="i386"      
+#PLATFORM="unknown-linux"  
+#GHC_DIST_FILENAME="ghc-$GHC_VERSION-$ARCHITECTURE-$PLATFORM-deb7.tar.bz2"
 
-CABAL_INSTALL_VERSION="1.22.6.0"
-CABAL_INSTALL_DIST_FILENAME="cabal-install-$CABAL_INSTALL_VERSION.tar.gz"
+#CABAL_VERSION="1.22.4.0"
+#CABAL_DIST_FILENAME="Cabal-$CABAL_VERSION.tar.gz"
 
-STACK_VERSION="0.1.6.0"  
-STACK_ARCHITECTURE="x86_64"  
-STACK_PLATFORM="linux"  
-STACK_DIST_FILENAME="stack-$STACK_VERSION-$STACK_PLATFORM-$STACK_ARCHITECTURE.tar.gz"
+#CABAL_INSTALL_VERSION="1.22.6.0"
+#CABAL_INSTALL_DIST_FILENAME="cabal-install-$CABAL_INSTALL_VERSION.tar.gz"
 
-echo "Descargando GHC tarball"
-# get distr  
-cd $HOME/Downloads
-wget "https://www.haskell.org/ghc/dist/$GHC_VERSION/$GHC_DIST_FILENAME"  
-tar xvfj $GHC_DIST_FILENAME  
-cd ghc-$GHC_VERSION  
+#STACK_VERSION="0.1.6.0"  
+#STACK_ARCHITECTURE="x86_64"  
+#STACK_PLATFORM="linux"  
+#STACK_DIST_FILENAME="stack-$STACK_VERSION-$STACK_PLATFORM-$STACK_ARCHITECTURE.tar.gz"
 
-# install to  
-echo "Instalando GHC"
-./configure # --prefix=$HOME/Development/bin/ghc-$GHC_VERSION  
+#echo "Descargando GHC tarball"
+## get distr  
+#cd $HOME/Downloads
+#wget "https://www.haskell.org/ghc/dist/$GHC_VERSION/$GHC_DIST_FILENAME"  
+#tar xvfj $GHC_DIST_FILENAME  
+#cd ghc-$GHC_VERSION  
 
-make install
+## install to  
+#echo "Instalando GHC"
+#./configure # --prefix=$HOME/Development/bin/ghc-$GHC_VERSION  
 
-# Este paso es probable que no sea necesario dado que lo estamos instalando en /usr/local
-# symbol links
-echo "Links simbólicos GHC"
-echo $1 | sudo -S cd /usr/local/bin &&
-echo $1 | sudo -S rm -f ghc &&
-echo $1 | sudo -S ln -s `pwd`/ghc-$GHC_VERSION ghc &&
+#make install
 
-# remove temporary files  
-cd $HOME/Downloads  
-rm -rfv ghc-$GHC_VERSION*
+## Este paso es probable que no sea necesario dado que lo estamos instalando en /usr/local
+## symbol links
+#echo "Links simbólicos GHC"
+#echo $1 | sudo -S cd /usr/local/bin &&
+#echo $1 | sudo -S rm -f ghc &&
+#echo $1 | sudo -S ln -s `pwd`/ghc-$GHC_VERSION ghc &&
 
-# The next isn't so well done. See https://gist.github.com/yantonov/10083524
-cd ~/src &&
-git clone --recursive git://git.haskell.org/ghc.git &&
-cd ghc &&
-./boot &&
-./configure --prefix=$HOME
+## remove temporary files  
+#cd $HOME/Downloads  
+#rm -rfv ghc-$GHC_VERSION*
+
+## The next isn't so well done. See https://gist.github.com/yantonov/10083524
+#cd ~/src &&
+#git clone --recursive git://git.haskell.org/ghc.git &&
+#cd ghc &&
+#./boot &&
+#./configure --prefix=$HOME
+
+# GIT configuration
+git config --global user.email "daniel.herrera.rendon@gmail.com"
+git config --global user.name "hefesto"
 
 echo $1 | sudo -S dnf install zsh -y
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
@@ -89,14 +95,14 @@ sudo chsh -s /bin/zsh hefesto
 
 echo $1 | sudo -S dnf intall emacs -y
 
-echo $1 | sudo -S su -c "cat << EOF > /etc/yum.repos.d/google-chrome.repo
+echo $1 | sudo -S cat << EOF > /etc/yum.repos.d/google-chrome.repo
 [google-chrome]
-name=google-chrome - \$basearch
-baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
+name=google-chrome - \\\$basearch
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/\\\$basearch
 enabled=1
 gpgcheck=1
 gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
-EOF"
+EOF
 
 echo $1 | sudo -S dnf install google-chrome-stable -y
 
@@ -118,8 +124,6 @@ echo $1 | sudo -S dnf install xmobar -y
 echo $1 | sudo -S dnf install feh -y
 echo $1 | sudo -S dnf install maven -y
 echo $1 | sudo -S dnf install xchat -y
-
-
 
 cd ~/temp
 wget --trust-server-names http://www.skype.com/go/getskype-linux-dynamic
