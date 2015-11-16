@@ -24,7 +24,17 @@ echo "Instalando Node.js"
 echo $1 | sudo -S dnf install npm nodejs-y
 
 echo "Instalando cosas..."
-echo $1 | sudo -S dnf install scrot xclip calibre -y
+echo $1 | sudo -S dnf install scrot xclip calibre zsh emacs -y
+
+# zsh
+curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
+curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+sudo chsh -s /bin/zsh hefesto
+
+# leiningen
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod a+x lein
+echo $1 | sudo -S mv lein /bin
 
 #echo "Instalando dependencias de GHC"
 ## GHC requirements
@@ -87,13 +97,6 @@ echo $1 | sudo -S dnf install scrot xclip calibre -y
 # GIT configuration
 git config --global user.email "daniel.herrera.rendon@gmail.com"
 git config --global user.name "hefesto"
-
-echo $1 | sudo -S dnf install zsh -y
-curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
-curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
-sudo chsh -s /bin/zsh hefesto
-
-echo $1 | sudo -S dnf intall emacs -y
 
 echo $1 | sudo -S cat << EOF > /etc/yum.repos.d/google-chrome.repo
 [google-chrome]
