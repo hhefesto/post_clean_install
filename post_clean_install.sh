@@ -12,6 +12,7 @@ echo "Haciendo folders FHS en ~"
 mkdir ~/opt
 mkdir ~/bin
 mkdir ~/src
+mkdir ~/dev
 
 echo "dnf update"
 echo $1 | sudo -S dnf update -y
@@ -19,12 +20,43 @@ echo $1 | sudo -S dnf update -y
 echo "instalando repositorios rpmFusion para dnf"
 echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
-# Tal vez npm instala nodejs. No he revisado.
-echo "Instalando Node.js"
-echo $1 | sudo -S dnf install npm nodejs-y
-
 echo "Instalando cosas..."
-echo $1 | sudo -S dnf install scrot xclip calibre zsh emacs -y
+echo $1 | sudo -S dnf install texlive scrot xclip calibre zsh emacs tomcat npm nodejs alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 -y
+
+# # Se necesitan hacer cambios a /etc/yum.repos.d/fedora.repo file y /etc/yum.repos.d/fedora-updates.repo correspondientemente:
+# [fedora]
+# ...
+# exclude=postgresql*
+# [updates]
+# ...
+# exclude=postgresql*
+echo $1 | sudo -S rpm -Uvh http://yum.postgresql.org/9.4/fedora/fedora-22-x86_64/pgdg-fedora94-9.4-4.noarch.rpm
+echo $1 | sudo -S dnf install postgresql94 postgresql94-server postgresql94-contrib
+echo $1 | sudo -S su - postgres -c /usr/pgsql-9.4/bin/initdb
+# Modificar archivo /var/lib/pgsql/9.4/data/postgresql.conf agregando:
+# listen_addresses = 'localhost'
+# port = 5432
+# El siguiente paso la verdad no hice nada... pero tampoco lo entendí bien
+# Modificar PostgreSQL /var/lib/pgsql/9.4/data/pg_hba.conf (host-based authentication):
+# # Local networks
+# host	all	all	        xx.xx.xx.xx/xx	md5
+# # Example
+# host	all	all     	10.20.4.0/24	md5
+# # Example 2
+# host	test	testuser	127.0.0.1/32	md5s
+echo $1 | sudo -S stemctl start postgresql-9.4.service
+echo $1 | sudo -S systemctl enable postgresql-9.4.service
+echo $1 | sudo -S su - postgres
+createdb test # Esto me dio un error: la base de datos ya existía
+psql test
+CREATE ROLE testuser WITH SUPERUSER LOGIN PASSWORD 'test';
+exit
+# Para probar la conexión utilizar:
+# psql -h localhost -U testuser test
+firewall-cmd --get-active-zones
+
+
+echo $1 | sudo -S dnf install http://dev.mysql.com/get/mysql-community-release-fc22-5.noarch.rpm
 
 # zsh
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
@@ -35,6 +67,7 @@ sudo chsh -s /bin/zsh hefesto
 wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 chmod a+x lein
 echo $1 | sudo -S mv lein /bin
+lein
 
 #echo "Instalando dependencias de GHC"
 ## GHC requirements
@@ -98,6 +131,7 @@ echo $1 | sudo -S mv lein /bin
 git config --global user.email "daniel.herrera.rendon@gmail.com"
 git config --global user.name "hefesto"
 
+# Chrome
 echo $1 | sudo -S cat << EOF > /etc/yum.repos.d/google-chrome.repo
 [google-chrome]
 name=google-chrome - \\\$basearch
@@ -109,44 +143,21 @@ EOF
 
 echo $1 | sudo -S dnf install google-chrome-stable -y
 
-echo $1 | sudo -S dnf install alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686
-
-echo $1 | sudo -S dnf install alsa-lib.i686 fontconfig.i686 freetype.i686 \
-glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 \
-libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 \
-	       pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686
-
-echo $1 | sudo -S dnf install http://dev.mysql.com/get/mysql-community-release-fc22-5.noarch.rpm
-
-echo $1 | sudo -S dnf install vlc -y
-echo $1 | sudo -S dnf install clementine -y
-echo $1 | sudo -S dnf install git -y
-echo $1 | sudo -S dnf install xmonad -y
-echo $1 | sudo -S dnf install stalonetray -y
-echo $1 | sudo -S dnf install xmobar -y
-echo $1 | sudo -S dnf install feh -y
-echo $1 | sudo -S dnf install maven -y
-echo $1 | sudo -S dnf install xchat -y
-
-cd ~/temp
-wget --trust-server-names http://www.skype.com/go/getskype-linux-dynamic
-
-mkdir ~/opt/skype
-tar xvf skype-4.3* -C ~/opt/skype --strip-components=1
-
-echo $1 | sudo -S ln -s ~/opt/skype/skype.desktop /usr/share/applications/skype.desktop
-echo $1 | sudo -S ln -s ~/opt/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png
-echo $1 | sudo -S ln -s ~/opt/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png
-
-touch ~/bin/skype
-chmod 755 ~/bin/skype
-
-cat << EOF > ~/bin/skype
-#!/bin/sh
-export SKYPE_HOME="~/opt/skype"
- 
-\$SKYPE_HOME/skype --resources=\$SKYPE_HOME \$*
-EOF
+# Skype
+# cd ~/temp
+# wget --trust-server-names http://www.skype.com/go/getskype-linux-dynamic
+# mkdir ~/opt/skype
+# tar xvf skype-4.3* -C ~/opt/skype --strip-components=1
+# echo $1 | sudo -S ln -s ~/opt/skype/skype.desktop /usr/share/applications/skype.desktop
+# echo $1 | sudo -S ln -s ~/opt/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png
+# echo $1 | sudo -S ln -s ~/opt/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png
+# touch ~/bin/skype
+# chmod 755 ~/bin/skype
+# cat << EOF > ~/bin/skype
+# #!/bin/sh
+# export SKYPE_HOME="~/opt/skype"
+# \$SKYPE_HOME/skype --resources=\$SKYPE_HOME \$*
+# EOF
 
 
 cd ~
