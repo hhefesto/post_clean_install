@@ -21,13 +21,13 @@ echo "instalando repositorios rpmFusion para dnf"
 echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
 echo "Instalando cosas..."
-echo $1 | sudo -S dnf install texlive scrot xclip calibre zsh emacs tomcat npm nodejs alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
+echo $1 | sudo -S dnf install vim texlive scrot xclip calibre zsh emacs tomcat nodejs alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
 
 # zsh
 echo "Instalando zsh y oh-my-zsh"
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
-sudo chsh -s /bin/zsh hefesto
+sudo chsh -s /usr/bin/zsh hhefesto
 
 #echo "Instalando dependencias de GHC"
 ## GHC requirements
@@ -90,20 +90,21 @@ sudo chsh -s /bin/zsh hefesto
 # GIT configuration
 echo "Configuring git."
 git config --global user.email "daniel.herrera.rendon@gmail.com"
-git config --global user.name "hefesto"
+git config --global user.name "hhefesto"
 
-# Chrome
-echo "Configuring and installing Chrome."
-echo $1 | sudo -S cat << EOF > /etc/yum.repos.d/google-chrome.repo
-[google-chrome]
-name=google-chrome - \\\$basearch
-baseurl=http://dl.google.com/linux/chrome/rpm/stable/\\\$basearch
-enabled=1
-gpgcheck=1
-gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
-EOF
-
-echo $1 | sudo -S dnf install google-chrome-stable -y
+# # # Chrome
+# su -
+# ## Then
+# cat << EOF > /etc/yum.repos.d/google-chrome.repo
+# [google-chrome]
+# name=google-chrome - \$basearch
+# baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
+# enabled=1
+# gpgcheck=1
+# gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+# EOF
+# exit
+# sudo dnf install google-chrome-stable -y
 
 # Skype
 # cd ~/temp
