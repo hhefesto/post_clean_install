@@ -21,7 +21,10 @@ echo "instalando repositorios rpmFusion para dnf"
 sudo yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
 echo "Instalando cosas..."
-sudo dnf install vim xclip zsh emacs nodejs alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 clementine git feh sshpass gimp libpqxx-devel.x86_64 gparted readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
+sudo dnf install vim xclip zsh emacs nodejs alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 clementine git feh sshpass gimp libpqxx-devel.x86_64 gparted readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 npm nginx-y
+
+echo "Instalando cosas de Node"
+npm install -g pm2
 
 # zsh
 echo "Instalando zsh y oh-my-zsh"
