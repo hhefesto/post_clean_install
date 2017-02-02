@@ -21,13 +21,20 @@ echo "instalando repositorios rpmFusion para dnf"
 echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
 echo "Instalando cosas..."
-echo $1 | sudo -S dnf install vim texlive scrot xclip calibre zsh emacs tomcat nodejs alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
+echo $1 | sudo -S dnf install vim texlive scrot xclip calibre zsh emacs tomcat alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
+
+# Node
+## install nvm, a version manager of node
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
+npm install bower
+npm install protractor
 
 # zsh
 echo "Instalando zsh y oh-my-zsh"
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
-sudo chsh -s /usr/bin/zsh hhefesto
+echo $1 | sudo -S chsh -s /usr/bin/zsh hefesto
+chsh -s /usr/bin/zsh hefesto
 
 #echo "Instalando dependencias de GHC"
 ## GHC requirements
