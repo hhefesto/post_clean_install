@@ -1,27 +1,29 @@
 #!/bin/bash
 
 # INFO:
-# He utilizado este script para mi personalización de mi ambiente justo después de haber instalado Fedora Workstation 22
+# He utilizado este script para mi personalización de mi ambiente justo después de haber instalado Centos 7
 # BUGS: Seguro hay muchos.
+# todo lo que sea "hhefesto" es mi nombre de usuario
 # USAGE:
 # Hacer post_clean_install.sh ejecutable con 'chmod +x post_clean_install.sh'
 # ejecutar './post_clean_install.sh <YOURPASSWORD>' con un usuarios en Sudoer.
 # Sonreir sí y sólo sí se pudo instalar sin error.
 
 echo "Haciendo folders FHS en ~"
+cd ~
 mkdir ~/opt
 mkdir ~/bin
 mkdir ~/src
 mkdir ~/dev
 
-echo "dnf update"
-echo $1 | sudo -S dnf update -y
+echo "yum update"
+echo $1 | sudo -S yum update -y
 
-echo "instalando repositorios rpmFusion para dnf"
+echo "instalando repositorios rpmFusion para yum"
 echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
 echo "Instalando cosas..."
-echo $1 | sudo -S dnf install vim texlive scrot xclip calibre zsh emacs tomcat alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
+echo $1 | sudo -S yum install vim texlive scrot xclip calibre zsh emacs tomcat alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
 
 # Node
 ## install nvm, a version manager of node
@@ -33,16 +35,16 @@ npm install protractor
 echo "Instalando zsh y oh-my-zsh"
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sudo sh
 curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
-echo $1 | sudo -S chsh -s /usr/bin/zsh hefesto
-chsh -s /usr/bin/zsh hefesto
+echo $1 | sudo -S chsh -s /usr/bin/zsh $USER
+chsh -s /usr/bin/zsh $USER
 
 #echo "Instalando dependencias de GHC"
 ## GHC requirements
-#echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
+#echo $1 | sudo -S yum install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
 ## To buil GHC doc
-#echo $1 | sudo -S dnf install docbook-utils docbook-utils-pdf docbook-style-xsl -y
+#echo $1 | sudo -S yum install docbook-utils docbook-utils-pdf docbook-style-xsl -y
 ## GHC suggestion: other packages that are useful for development: (optional)
-#echo $1 | sudo -S dnf install strace patch -y
+#echo $1 | sudo -S yum install strace patch -y
 
 #echo "Definiendo versiones/nombres de GHC, Cabal y Stack"
 ## https://gist.github.com/yantonov/10083524
@@ -111,7 +113,7 @@ git config --global user.name "hhefesto"
 # gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
 # EOF
 # exit
-# sudo dnf install google-chrome-stable -y
+# sudo yum install google-chrome-stable -y
 
 # Skype
 # cd ~/temp
