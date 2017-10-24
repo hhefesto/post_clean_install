@@ -1,13 +1,28 @@
 #!/bin/bash
 
+# Copyright (c) 2017 https://github.com/hhefesto/post_clean_install, All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+# Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+# Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+# Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission. 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 # INFO:
 # He utilizado este script para mi personalización de mi ambiente justo después de haber instalado Centos 7
 # BUGS: Seguro hay muchos.
 # todo lo que sea "hhefesto" es mi nombre de usuario
 # USAGE:
-# Hacer post_clean_install.sh ejecutable con 'chmod +x post_clean_install.sh'
 # ejecutar './post_clean_install.sh <YOURPASSWORD>' con un usuarios en Sudoer.
 # Sonreir sí y sólo sí se pudo instalar sin error.
+
+if [ "$#" -ne 1 ]; then
+    echo "ERROR:"
+    echo "Incorrect number of parameters."
+    echo "USAGE:"
+    echo "sudo_user ~/>post_clean_install.sh [sudo_user password]"
+fi
 
 echo "Haciendo folders FHS en ~"
 cd ~
@@ -16,14 +31,23 @@ mkdir ~/bin
 mkdir ~/src
 mkdir ~/dev
 
-echo "yum update"
-echo $1 | sudo -S yum update -y
+echo "dnf update"
+echo $1 | sudo -S dnf update -y
 
-echo "instalando repositorios rpmFusion para yum"
-echo $1 | sudo -S yum install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
+echo "Instalando repositorios rpmFusion para dnf"
+echo $1 | sudo -S dnf install --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
-echo "Instalando cosas..."
-echo $1 | sudo -S yum install vim texlive scrot xclip calibre zsh emacs tomcat alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 -y
+echo "Bajando paquetes rpm inexitentes en los repositorios de dnf."
+wget -O dropbox.rpm dropbox.rpm https://www.dropbox.com/download?dl=packages/fedora/nautilus-dropbox-2015.10.28-1.fedora.x86_64.rpm
+
+echo "Instalando."
+echo $1 | sudo -S dnf install vim texlive scrot xclip calibre zsh emacs tomcat alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 htop dropbox.rpm fvwm network-manager-applet xscreensaver nall nautilus-open-terminal -y
+
+echo "Quitando paquetes rpm."
+rm *rpm
+
+echo "Desinstalando cosas..."
+echo $1 | sudo -S dnf remove totem -y
 
 # Node
 ## install nvm, a version manager of node
@@ -40,11 +64,11 @@ chsh -s /usr/bin/zsh $USER
 
 #echo "Instalando dependencias de GHC"
 ## GHC requirements
-#echo $1 | sudo -S yum install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
+#echo $1 | sudo -S dnf install glibc-devel ncurses-devel gmp-devel autoconf automake libtool gcc gcc-c++ make perl python git -y
 ## To buil GHC doc
-#echo $1 | sudo -S yum install docbook-utils docbook-utils-pdf docbook-style-xsl -y
+#echo $1 | sudo -S dnf install docbook-utils docbook-utils-pdf docbook-style-xsl -y
 ## GHC suggestion: other packages that are useful for development: (optional)
-#echo $1 | sudo -S yum install strace patch -y
+#echo $1 | sudo -S dnf install strace patch -y
 
 #echo "Definiendo versiones/nombres de GHC, Cabal y Stack"
 ## https://gist.github.com/yantonov/10083524
@@ -104,7 +128,7 @@ git config --global user.name "hhefesto"
 # # # Chrome
 # su -
 # ## Then
-# cat << EOF > /etc/yum.repos.d/google-chrome.repo
+# cat << EOF > /etc/dnf.repos.d/google-chrome.repo
 # [google-chrome]
 # name=google-chrome - \$basearch
 # baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
@@ -113,7 +137,7 @@ git config --global user.name "hhefesto"
 # gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
 # EOF
 # exit
-# sudo yum install google-chrome-stable -y
+# sudo dnf install google-chrome-stable -y
 
 # Skype
 # cd ~/temp
