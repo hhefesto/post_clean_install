@@ -22,6 +22,7 @@ if [ "$#" -ne 1 ]; then
     echo "Incorrect number of parameters."
     echo "USAGE:"
     echo "sudo_user ~/>post_clean_install.sh [sudo_user password]"
+    exit
 fi
 
 echo "Haciendo folders FHS en ~"
