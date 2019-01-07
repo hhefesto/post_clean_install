@@ -42,7 +42,7 @@ echo "Bajando paquetes rpm inexitentes en los repositorios de dnf."
 wget -O dropbox.rpm dropbox.rpm https://www.dropbox.com/download?dl=packages/fedora/nautilus-dropbox-2015.10.28-1.fedora.x86_64.rpm
 
 echo "Instalando."
-echo $1 | sudo -S dnf install vim texlive scrot xclip calibre zsh emacs tomcat alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 htop dropbox.rpm fvwm network-manager-applet xscreensaver nall nautilus-open-terminal -y
+echo $1 | sudo -S dnf install vim texlive scrot xclip calibre zsh emacs tomcat alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686 vlc clementine git xmonad stalonetray xmobar feh maven xchat sshpass android-opengl-api.noarch gimp vagrant VirtualBox.x86_64 libpqxx-devel.x86_64 gparted octave readline-devel.x86_64 gmp.x86_64 freeglut-devel.x86_64 htop dropbox.rpm fvwm network-manager-applet xscreensaver nall nautilus-open-terminal levien-inconsolata-fonts.noarch -y
 
 echo "Quitando paquetes rpm."
 rm *rpm
